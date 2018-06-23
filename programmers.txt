@@ -14,7 +14,7 @@
 # License along with this library; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-edbg.name=Atmel EDBG
+edbg.name=Atmel EDBG (Industruino SAMD/SAML)
 edbg.communication=USB
 edbg.protocol=cmsis-dap.cfg
 edbg.program.tool=openocd
@@ -22,7 +22,7 @@ edbg.program.tool.default=openocd
 edbg.program.extra_params=
 edbg.extra_params=
 
-atmel_ice.name=Atmel-ICE
+atmel_ice.name=Atmel-ICE (Industruino SAMD/SAML)
 atmel_ice.communication=USB
 atmel_ice.protocol=cmsis-dap.cfg
 atmel_ice.program.tool=openocd
@@ -30,7 +30,7 @@ atmel_ice.program.tool.default=openocd
 atmel_ice.program.extra_params=
 atmel_ice.extra_params=
 
-sam_ice.name=Atmel SAM-ICE
+sam_ice.name=Atmel SAM-ICE (Industruino SAMD/SAML)
 sam_ice.communication=USB
 sam_ice.protocol=cmsis-dap.cfg
 sam_ice.program.tool=openocd
