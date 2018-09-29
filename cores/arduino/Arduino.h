@@ -1,6 +1,7 @@
 /*
   Arduino.h - Main include file for the Arduino SDK
   Copyright (c) 2014 Arduino LLC.  All right reserved.
+  Copyright (C) 2018 Industruino <connect@industruino.com>
 
   This library is free software; you can redistribute it and/or
   modify it under the terms of the GNU Lesser General Public
@@ -114,5 +115,10 @@ extern void analogOutputInit( void ) ;
 
 // ARM toolchain doesn't provide itoa etc, provide them
 #include "api/itoa.h"
+
+// The same define inside the 'saml21e18b.h' CMSIS file is not visible
+#if (SAML21B_SERIES)
+#define _U(x) x ## U
+#endif
 
 #endif // Arduino_h

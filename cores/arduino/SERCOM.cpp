@@ -1,5 +1,6 @@
 /*
   Copyright (c) 2014 Arduino.  All right reserved.
+  Copyright (C) 2018 Industruino <connect@industruino.com>
 
   This library is free software; you can redistribute it and/or
   modify it under the terms of the GNU Lesser General Public
@@ -16,8 +17,12 @@
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "Arduino.h"
+//  Part of the SAML code ported from Mattairtech ArduinoCore-samd (https://github.com/mattairtech/ArduinoCore-samd):
+//     Copyright: Copyright (c) 2017-2018 MattairTech LLC. All right reserved.
+//     License: LGPL http://www.gnu.org/licenses/lgpl-2.1.html
+
 #include "SERCOM.h"
+#include "Arduino.h"
 #include "variant.h"
 
 #ifndef WIRE_RISE_TIME_NANOSECONDS
@@ -37,6 +42,14 @@ SERCOM::SERCOM(Sercom* s)
 */
 void SERCOM::initUART(SercomUartMode mode, SercomUartSampleRate sampleRate, uint32_t baudrate)
 {
+#if (SAML21B_SERIES)
+  // On the SAML21, SERCOM5 is on PD0, which is a low power domain on a different bridge than the other SERCOMs.
+  // SERCOM5 does not support SAMPLE_RATE_x8 or SAMPLE_RATE_x3.
+  if (sercom == SERCOM5) {
+    sampleRate = SAMPLE_RATE_x16;
+  }
+#endif
+
   initClockNVIC();
   resetUART();
 
@@ -209,7 +222,7 @@ void SERCOM::initSPI(SercomSpiTXPad mosi, SercomRXPad miso, SercomSpiCharSize ch
   initClockNVIC();
 
   //Setting the CTRLA register
-  sercom->SPI.CTRLA.reg =	SERCOM_SPI_CTRLA_MODE_SPI_MASTER |
+  sercom->SPI.CTRLA.reg = SERCOM_SPI_CTRLA_MODE(SPI_MASTER_OPERATION) |
                           SERCOM_SPI_CTRLA_DOPO(mosi) |
                           SERCOM_SPI_CTRLA_DIPO(miso) |
                           dataOrder << SERCOM_SPI_CTRLA_DORD_Pos;
@@ -733,6 +746,7 @@ void SERCOM::initClockNVIC( void )
   NVIC_SetPriority (IdNvic, SERCOM_NVIC_PRIORITY);  /* set Priority */
 
   //Setting clock
+#if (SAMD21_SERIES)
   GCLK->CLKCTRL.reg = GCLK_CLKCTRL_ID( clockId ) | // Generic Clock 0 (SERCOMx)
                       GCLK_CLKCTRL_GEN_GCLK0 | // Generic Clock Generator 0 is source
                       GCLK_CLKCTRL_CLKEN ;
@@ -741,4 +755,10 @@ void SERCOM::initClockNVIC( void )
   {
     /* Wait for synchronization */
   }
+#elif (SAML21B_SERIES)
+  GCLK->PCHCTRL[clockId].reg = ( GCLK_PCHCTRL_CHEN | GCLK_PCHCTRL_GEN_GCLK0 );
+  while ( (GCLK->PCHCTRL[clockId].reg & GCLK_PCHCTRL_CHEN) != GCLK_PCHCTRL_CHEN );      // wait for sync
+#else
+  #error "SERCOM.cpp: Unsupported chip"
+#endif
 }

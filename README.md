@@ -1,26 +1,33 @@
-# Arduino Core for SAMD21 CPU
+# Industruino Core for SAML21B CPU
 
-This repository contains the source code and configuration files of the Arduino Core
-for Atmel's SAMD21 processor (used on the Arduino/Genuino Zero, MKR1000 and MKRZero boards).
+This repository contains the source code and configuration files of the Industruino Core
+for Atmel's SAML21B processor (used on the Industruino 4-20mA.ker board).
+
+This core is based on the [Arduino Core for SAMD21 CPU](https://github.com/arduino/ArduinoCore-samd).
+
+The SAML21B specific code is derived/included from [MattairTech SAM D|L|C Core for Arduino](https://github.com/mattairtech/ArduinoCore-samd) delevoped by [Justin Mattair](https://github.com/mattairtech) of [MattairTech LLC](https://www.mattairtech.com).
 
 ## Installation on Arduino IDE
 
-This core is available as a package in the Arduino IDE cores manager.
-Just open the "Boards Manager" and install the package called:
+This core can be installed as a package by the Arduino IDE cores manager.
 
-"Arduino SAMD Boards (32-bit ARM Cortex-M0+)"
+Add the following URL to the "Additional Boards Manager URLs" field of the Arduino IDE preferences
+
+https://static.industruino.com/downloads/code/IndustruinoCores/IndustruinoSAML/pkgdef/package_industruino_saml_index.json
+
+then open the "Boards Manager" and install the package called "Industruino SAML Boards (32-bit ARM Cortex-M0+)"
 
 ## Support
 
-There is a dedicated section of the Arduino Forum for general discussion and project assistance:
+If you are looking for support, documentation or getting started directions, please check the page at the following URL:
 
-http://forum.arduino.cc/index.php?board=98.0
+http://industruino.com/support
 
 ## Bugs or Issues
 
 If you find a bug you can submit an issue here on github:
 
-https://github.com/arduino/ArduinoCore-samd/issues
+https://github.com/Industruino/IndustruinoSAML/issues
 
 Before posting a new issue, please check if the same problem has been already reported by someone else
 to avoid duplicates.
@@ -79,8 +86,12 @@ If you already installed an hourly build and you want to update it with the late
 
 This core has been developed by Arduino LLC in collaboration with Atmel.
 
+The SAML21B specific code has been originally delevoped by [Justin Mattair](https://github.com/mattairtech) of [MattairTech LLC](https://www.mattairtech.com) ([MattairTech SAM D|L|C Core for Arduino](https://github.com/mattairtech/ArduinoCore-samd)).
+
 ```
   Copyright (c) 2015 Arduino LLC.  All right reserved.
+  Copyright (c) 2017-2018 MattairTech LLC. All right reserved.
+  Copyright (C) 2018 Industruino <connect@industruino.com>  All right reserved.
 
   This library is free software; you can redistribute it and/or
   modify it under the terms of the GNU Lesser General Public
