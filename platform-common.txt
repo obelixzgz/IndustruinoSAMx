@@ -206,6 +206,22 @@ tools.openocd.bootloader.params.quiet=-d0
 tools.openocd.bootloader.pattern="{path}/{cmd}" {bootloader.verbose} -s "{path}/share/openocd/scripts/" -f "interface/{protocol}" -c "set telnet_port 0" {extra_params} -f "target/at91samdXX.cfg" -c "telnet_port disabled; init; halt; at91samd bootloader 0; program {{runtime.platform.path}/bootloaders/{bootloader.file}} verify reset; shutdown"
 
 #
+# OpenOCD protected bootloader flashing
+#
+
+tools.openocd-prot.path={runtime.tools.openocd-0.10.0-arduino7.path}
+tools.openocd-prot.cmd=bin/openocd
+tools.openocd-prot.cmd.windows=bin/openocd.exe
+
+tools.openocd-prot.erase.params.verbose=-d3
+tools.openocd-prot.erase.params.quiet=-d0
+tools.openocd-prot.erase.pattern=
+
+tools.openocd-prot.bootloader.params.verbose=-d2
+tools.openocd-prot.bootloader.params.quiet=-d0
+tools.openocd-prot.bootloader.pattern="{path}/{cmd}" {bootloader.verbose} -s "{path}/share/openocd/scripts/" -f "{runtime.platform.path}/variants/{build.variant}/{build.openocdscript}" -c "telnet_port disabled; init; at91samd chip-erase; reset; sleep 1000; init; halt; at91samd bootloader 0; reset; sleep 1000; init; halt; program {{runtime.platform.path}/bootloaders/{bootloader.file}} verify; reset; sleep 1000; init; halt; at91samd bootloader {bootloader.size-dec}; reset; sleep 500; shutdown"
+
+#
 # OpenOCD sketch upload - version with configurable bootloader size
 # FIXME: this programmer is a workaround for default options being overwritten by uploadUsingPreferences
 #
