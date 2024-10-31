@@ -48,7 +48,6 @@ void PendSV_Handler   (void) __attribute__ ((weak, alias("Dummy_Handler")));
 void SysTick_Handler  (void);
 
 /* Peripherals handlers */
-void SYSTEM_Handler   (void) __attribute__ ((weak, alias("Dummy_Handler")));
 void PM_Handler       (void) __attribute__ ((weak, alias("Dummy_Handler")));
 void SYSCTRL_Handler  (void) __attribute__ ((weak, alias("Dummy_Handler")));
 void WDT_Handler      (void) __attribute__ ((weak, alias("Dummy_Handler")));
@@ -88,8 +87,10 @@ void AC_Handler       (void) __attribute__ ((weak, alias("Dummy_Handler")));
 void DAC_Handler      (void) __attribute__ ((weak, alias("Dummy_Handler")));
 void PTC_Handler      (void) __attribute__ ((weak, alias("Dummy_Handler")));
 void I2S_Handler      (void) __attribute__ ((weak, alias("Dummy_Handler")));
+#if (SAML21B_SERIES)
 void AES_Handler      (void) __attribute__ ((weak, alias("Dummy_Handler")));
 void TRNG_Handler     (void) __attribute__ ((weak, alias("Dummy_Handler")));
+#endif
 
 /* Initialize segments */
 extern uint32_t __etext;
@@ -153,7 +154,7 @@ __attribute__ ((section(".isr_vector"))) const DeviceVectors exception_table =
   (void*) I2S_Handler,            /* 27 Inter-IC Sound Interface */
   (void*) (0UL),                  /* Reserved */
 #elif (SAML21B_SERIES)
-  (void*) SYSTEM_Handler,         /*  0 SYSTEM handler (includes SYSTEM, MCLK, OSCCTRL, OSC32KCTRL, PAC, PM, SUPC, and TAL) */
+  (void*) SYSCTRL_Handler,        /*  0 SYSTEM handler (includes SYSTEM, MCLK, OSCCTRL, OSC32KCTRL, PAC, PM, SUPC, and TAL) */
   (void*) WDT_Handler,            /*  1 Watchdog Timer */
   (void*) RTC_Handler,            /*  2 Real-Time Counter */
   (void*) EIC_Handler,            /*  3 External Interrupt Controller */

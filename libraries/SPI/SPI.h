@@ -35,9 +35,10 @@
 #define SPI_HAS_NOTUSINGINTERRUPT 1
 
 #if defined(ARDUINO_ARCH_SAMD)
-  // The datasheet specifies a typical SPI SCK period (tSCK) of 84 ns,
-  // see "Table 37-62. SPI Timing Characteristics and Requirements",
-  // which translates into a (typical) maximum SPI clock of 11.9 MHz.
+  // The datasheet specifies a typical SPI SCK period (tSCK) of 42 ns,
+  // see "Table 36-48. SPI Timing Characteristics and Requirements",
+  // which translates into a maximum SPI clock of 23.8 MHz.
+  // Conservatively, the divider is set for a 12 MHz maximum SPI clock.
   #define SPI_MIN_CLOCK_DIVIDER (uint8_t)(1 + ((F_CPU - 1) / 12000000))
 #elif defined(ARDUINO_ARCH_SAML)
   // The datasheet specifies a minimum SPI SCK period (tSCK) of 141 ns,

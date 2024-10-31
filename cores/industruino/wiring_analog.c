@@ -145,7 +145,7 @@ static inline uint32_t mapResolution(uint32_t value, uint32_t from, uint32_t to)
  * Internal Reference is at 1.0v
  * External Reference should be between 1v and VDDANA-0.6v=2.7v
  *
- * Warning : The maximum I/O voltage is Vcc
+ * Warning : On Arduino Zero board the input/output voltage for SAMD21G18 is 3.3 volts maximum
  */
 void analogReference(eAnalogReference mode)
 {
@@ -155,40 +155,40 @@ void analogReference(eAnalogReference mode)
 #if (SAMD21_SERIES)
     case AR_INTERNAL:
     case AR_INTERNAL2V23:
-      ADC->INPUTCTRL.bit.GAIN = ADC_INPUTCTRL_GAIN_1X_Val;        // Gain Factor Selection (1X)
-      ADC->REFCTRL.bit.REFSEL = ADC_REFCTRL_REFSEL_INTVCC0_Val;   // 1/1.48 VDDANA = 1/1.48 * 3V3 = 2.2297
+      ADC->INPUTCTRL.bit.GAIN = ADC_INPUTCTRL_GAIN_1X_Val;      // Gain Factor Selection (1X)
+      ADC->REFCTRL.bit.REFSEL = ADC_REFCTRL_REFSEL_INTVCC0_Val; // 1/1.48 VDDANA = 1/1.48 * 3V3 = 2.2297
       break;
 
     case AR_EXTERNAL:
     case AR_EXTERNAL_VREFA:
-      ADC->INPUTCTRL.bit.GAIN = ADC_INPUTCTRL_GAIN_1X_Val;        // Gain Factor Selection (1X)
+      ADC->INPUTCTRL.bit.GAIN = ADC_INPUTCTRL_GAIN_1X_Val;      // Gain Factor Selection (1X)
       ADC->REFCTRL.bit.REFSEL = ADC_REFCTRL_REFSEL_AREFA_Val;
       break;
 
     case AR_EXTERNAL_VREFB:
-      ADC->INPUTCTRL.bit.GAIN = ADC_INPUTCTRL_GAIN_1X_Val;        // Gain Factor Selection (1X)
+      ADC->INPUTCTRL.bit.GAIN = ADC_INPUTCTRL_GAIN_1X_Val;      // Gain Factor Selection (1X)
       ADC->REFCTRL.bit.REFSEL = ADC_REFCTRL_REFSEL_AREFB_Val;
       break;
 
     case AR_INTERNAL1V0:
-      ADC->INPUTCTRL.bit.GAIN = ADC_INPUTCTRL_GAIN_1X_Val;        // Gain Factor Selection (1X)
-      ADC->REFCTRL.bit.REFSEL = ADC_REFCTRL_REFSEL_INT1V_Val;     // 1.0V voltage reference
+      ADC->INPUTCTRL.bit.GAIN = ADC_INPUTCTRL_GAIN_1X_Val;      // Gain Factor Selection (1X)
+      ADC->REFCTRL.bit.REFSEL = ADC_REFCTRL_REFSEL_INT1V_Val;   // 1.0V voltage reference
       break;
 
     case AR_INTERNAL1V65:
-      ADC->INPUTCTRL.bit.GAIN = ADC_INPUTCTRL_GAIN_1X_Val;        // Gain Factor Selection (1X)
-      ADC->REFCTRL.bit.REFSEL = ADC_REFCTRL_REFSEL_INTVCC1_Val;   // 1/2 VDDANA = 0.5 * 3V3 = 1.65V
+      ADC->INPUTCTRL.bit.GAIN = ADC_INPUTCTRL_GAIN_1X_Val;      // Gain Factor Selection (1X)
+      ADC->REFCTRL.bit.REFSEL = ADC_REFCTRL_REFSEL_INTVCC1_Val; // 1/2 VDDANA = 0.5 * 3V3 = 1.65V
       break;
 
     case AR_DEFAULT:
     default:
-      ADC->INPUTCTRL.bit.GAIN = ADC_INPUTCTRL_GAIN_DIV2_Val;      // Gain Factor Selection (0.5X)
-      ADC->REFCTRL.bit.REFSEL = ADC_REFCTRL_REFSEL_INTVCC1_Val;   // 1/2 VDDANA = 0.5 * 3V3 = 1.65V
+      ADC->INPUTCTRL.bit.GAIN = ADC_INPUTCTRL_GAIN_DIV2_Val;    // Gain Factor Selection (0.5X)
+      ADC->REFCTRL.bit.REFSEL = ADC_REFCTRL_REFSEL_INTVCC1_Val; // 1/2 VDDANA = 0.5 * 3V3 = 1.65V
       break;
 #elif (SAML21B_SERIES)
     case AR_INTERNAL:
     case AR_INTERNAL2V06:
-      ADC->REFCTRL.bit.REFSEL = ADC_REFCTRL_REFSEL_INTVCC0_Val;   // 1/1.6 VDDANA = 0.625 * 3.3V = 2.0625V
+      ADC->REFCTRL.bit.REFSEL = ADC_REFCTRL_REFSEL_INTVCC0_Val; // 1/1.6 VDDANA = 0.625 * 3.3V = 2.0625V
       break;
 
     case AR_EXTERNAL:
@@ -470,13 +470,13 @@ void analogWrite(pin_size_t pin, int value)
         // Disable TCx
         TCx->COUNT16.CTRLA.bit.ENABLE = 0;
         syncTC_16(TCx);
-        // Set Timer counter Mode to 16 bits
+#if (SAMD21_SERIES)
+        // Set Timer counter Mode to 16 bits, normal PWM
+        TCx->COUNT16.CTRLA.reg |= TC_CTRLA_MODE_COUNT16 @ TC_CTRLA_WAVEGEN_NPWM;
+#elif (SAML21B_SERIES)
         TCx->COUNT16.CTRLA.reg |= TC_CTRLA_MODE_COUNT16;
         syncTC_16(TCx);
         // Set TCx as normal PWM
-#if (SAMD21_SERIES)
-        TCx->COUNT16.CTRLA.reg |= TC_CTRLA_WAVEGEN_NPWM;
-#elif (SAML21B_SERIES)
         TCx->COUNT16.WAVE.reg = TC_WAVE_WAVEGEN_NPWM;
 #endif
         syncTC_16(TCx);

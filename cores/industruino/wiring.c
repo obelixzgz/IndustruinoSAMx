@@ -147,8 +147,6 @@ void init( void )
   while ( ADC->SYNCBUSY.reg & ADC_SYNCBUSY_MASK );   // Wait for synchronization of registers between the clock domains
 #endif
 
-  ADC->SAMPCTRL.reg = 0x3f;                        // Set max Sampling Time Length
-
   ADC->INPUTCTRL.reg = ADC_INPUTCTRL_MUXNEG_GND;   // No Negative input (Internal Ground)
 
 #if (SAMD21_SERIES)

@@ -29,6 +29,7 @@
 #include "variant.h"
 #include "USB_host.h"
 #include "samd21_host.h"
+#include "wiring_private.h"
 
 #define HOST_DEFINED
 #ifdef HOST_DEFINED
@@ -48,25 +49,25 @@ extern void (*gpf_isr)(void);
 #if (SAMD21_SERIES)
 #define NVM_CALIBRATION_ADDRESS    NVMCTRL_OTP4
 // USB TRANSN calibration value. Should be written to the USB PADCAL register.
-#define NVM_USB_PAD_TRANSN_POS     (45)
-#define NVM_USB_PAD_TRANSN_SIZE    (5)
+#define NVM_USB_PAD_TRANSN_POS     45
+#define NVM_USB_PAD_TRANSN_SIZE    5
 // USB TRANSP calibration value. Should be written to the USB PADCAL register.
-#define NVM_USB_PAD_TRANSP_POS     (50)
-#define NVM_USB_PAD_TRANSP_SIZE    (5)
+#define NVM_USB_PAD_TRANSP_POS     50
+#define NVM_USB_PAD_TRANSP_SIZE    5
 // USB TRIM calibration value. Should be written to the USB PADCAL register.
-#define NVM_USB_PAD_TRIM_POS       (55)
-#define NVM_USB_PAD_TRIM_SIZE      (3)
+#define NVM_USB_PAD_TRIM_POS       55
+#define NVM_USB_PAD_TRIM_SIZE      3
 #elif (SAML21B_SERIES)
 #define NVM_CALIBRATION_ADDRESS    NVMCTRL_OTP5
 // USB TRANSN calibration value. Should be written to the USB PADCAL register.
-#define NVM_USB_PAD_TRANSN_POS     (13)
-#define NVM_USB_PAD_TRANSN_SIZE    (5)
+#define NVM_USB_PAD_TRANSN_POS     13
+#define NVM_USB_PAD_TRANSN_SIZE    5
 // USB TRANSP calibration value. Should be written to the USB PADCAL register.
-#define NVM_USB_PAD_TRANSP_POS     (18)
-#define NVM_USB_PAD_TRANSP_SIZE    (5)
+#define NVM_USB_PAD_TRANSP_POS     18
+#define NVM_USB_PAD_TRANSP_SIZE    5
 // USB TRIM calibration value. Should be written to the USB PADCAL register.
-#define NVM_USB_PAD_TRIM_POS       (23)
-#define NVM_USB_PAD_TRIM_SIZE      (3)
+#define NVM_USB_PAD_TRIM_POS       23
+#define NVM_USB_PAD_TRIM_SIZE      3
 #endif
 
 #define USB_PAD_TRANSN_REG_POS     (6)
@@ -104,7 +105,7 @@ void UHD_Init(void)
 // 	PORT->Group[0].PMUX[PIN_PA25G_USB_DP/2].reg |= MUX_PA25G_USB_DP << (4 * (PIN_PA25G_USB_DP & 0x01u));
 
 	/* ----------------------------------------------------------------------------------------------
-	* Put Generic Clock Generator 0 as source for Generic Clock Multiplexer (USB reference)
+	* Put Generic Clock Generator 0 as source for Generic Clock Multiplexer GCM_USB (USB reference)
 	*/
 #if (SAMD21_SERIES)
 	GCLK->CLKCTRL.reg = GCLK_CLKCTRL_ID(GCM_USB) |        // Generic Clock Multiplexer
