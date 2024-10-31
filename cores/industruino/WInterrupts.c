@@ -181,13 +181,13 @@ void detachInterrupt(pin_size_t pin)
   EExt_Interrupts in = g_APinDescription[pin].ulExtInt;
 #else
   EExt_Interrupts in = digitalPinToInterrupt(pin);
-#endif
+#endif 
   if (in == NOT_AN_INTERRUPT || in == EXTERNAL_INT_NMI)
     return;
 
   uint32_t inMask = 1 << in;
   EIC->INTENCLR.reg = EIC_INTENCLR_EXTINT(inMask);
-
+  
   // Disable wakeup capability on pin during sleep
 #if (SAMD21_SERIES)
   EIC->WAKEUP.reg &= ~inMask;

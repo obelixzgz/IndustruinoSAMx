@@ -88,7 +88,7 @@ void tone (unsigned char outputPin, unsigned int frequency, unsigned long durati
   // Configure interrupt request
   NVIC_DisableIRQ(TONE_TC_IRQn);
   NVIC_ClearPendingIRQ(TONE_TC_IRQn);
-
+    
   if(!firstTimeRunning)
   {
     firstTimeRunning = true;
@@ -105,7 +105,7 @@ void tone (unsigned char outputPin, unsigned int frequency, unsigned long durati
     while ((GCLK->PCHCTRL[GCM_TC0_TC1].reg & GCLK_PCHCTRL_CHEN) == 0);
 #endif
   }
-
+  
   if (toneIsActive && (outputPin != lastOutputPin))
     noTone(lastOutputPin);
 
@@ -118,9 +118,9 @@ void tone (unsigned char outputPin, unsigned int frequency, unsigned long durati
 
   ccValue = toneMaxFrequency / frequency - 1;
   prescalerConfigBits = TC_CTRLA_PRESCALER_DIV1;
-
+  
   uint8_t i = 0;
-
+  
   while(ccValue > TONE_TC_TOP)
   {
     ccValue = toneMaxFrequency / frequency / (2<<i) - 1;
@@ -128,23 +128,23 @@ void tone (unsigned char outputPin, unsigned int frequency, unsigned long durati
     if(i == 4 || i == 6 || i == 8) //DIV32 DIV128 and DIV512 are not available
      i++;
   }
-
+  
   switch(i-1)
   {
     case 0: prescalerConfigBits = TC_CTRLA_PRESCALER_DIV2; break;
-
+    
     case 1: prescalerConfigBits = TC_CTRLA_PRESCALER_DIV4; break;
-
+    
     case 2: prescalerConfigBits = TC_CTRLA_PRESCALER_DIV8; break;
-
+    
     case 3: prescalerConfigBits = TC_CTRLA_PRESCALER_DIV16; break;
-
+    
     case 5: prescalerConfigBits = TC_CTRLA_PRESCALER_DIV64; break;
-
+      
     case 7: prescalerConfigBits = TC_CTRLA_PRESCALER_DIV256; break;
-
+    
     case 9: prescalerConfigBits = TC_CTRLA_PRESCALER_DIV1024; break;
-
+    
     default: break;
   }
 
@@ -175,7 +175,7 @@ void tone (unsigned char outputPin, unsigned int frequency, unsigned long durati
 
   // Enable the TONE_TC interrupt request
   TONE_TC->COUNT16.INTENSET.bit.MC0 = 1;
-
+  
   if (outputPin != lastOutputPin)
   {
     lastOutputPin = outputPin;
@@ -187,7 +187,7 @@ void tone (unsigned char outputPin, unsigned int frequency, unsigned long durati
   // Enable TONE_TC
   TONE_TC->COUNT16.CTRLA.reg |= TC_CTRLA_ENABLE;
   WAIT_TC16_REGS_SYNC(TONE_TC)
-
+  
   NVIC_EnableIRQ(TONE_TC_IRQn);
 }
 
